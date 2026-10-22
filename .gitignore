@@ -1,1 +1,23 @@
+# Ignore lock files made by InDesign.
 *.idlk
+
+# Ignore folder settings made by macOS.
+.DS_Store
+
+# Ignore extra file data made by macOS.
+._*
+
+# Ignore local Node packages.
+node_modules/
+
+# Ignore npm error logs.
+npm-debug.log*
+
+# Ignore temporary Vim files.
+*.swp
+# Ignore extra temporary Vim files.
+*.swo
+# Ignore editor backup files.
+*~
+
+# Keep README.md, AGENTS.md, docs and dist in Git.

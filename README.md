@@ -2,7 +2,7 @@
 
 Flattersatz gives justified text an uneven right edge. It places small, invisible shapes beside the text. These shapes make alternate lines shorter. It does not change the words or paragraph styles.
 
-This project is an InDesign script. You run it from the Scripts panel. It is not a panel plug-in.
+This repository contains two InDesign scripts. You run them from the Scripts panel. They are not panel plug-ins.
 
 An experimental second script, **Flattersatz Preview**, compares that method with a ragged-right version that uses text formatting instead of wrap shapes. It creates a separate comparison document and leaves the source frame unchanged. See [the preview guide](docs/TYPOGRAPHIC-PREVIEW.md).
 
@@ -26,15 +26,15 @@ Close the comparison document without saving to discard the preview. There is no
 
 ## Install
 
-1. Download or copy [dist/flattersatz.jsx](dist/flattersatz.jsx).
+1. Download [flattersatz.jsx](dist/flattersatz.jsx) for the historical wrap method, or [flattersatz-preview.jsx](dist/flattersatz-preview.jsx) for the typography preview. You can install both.
 2. In InDesign, open **Window > Utilities > Scripts**.
 3. Right-click **User** and choose **Reveal in Finder** on macOS or **Reveal in Explorer** on Windows.
-4. Put `flattersatz.jsx` in the **Scripts Panel** folder.
+4. Put the chosen `.jsx` file or files in the **Scripts Panel** folder.
 5. Find the script in the Scripts panel. Double-click it to run it.
 
-Only this one file is needed. You do not need Node.js, Underscore or a plug-in manager to use it.
+Each `.jsx` file is complete and runs on its own. You do not need Node.js or a plug-in manager to use the scripts.
 
-## Use
+## Use the historical wrap script
 
 1. Open a document. Select one or more text frames with the Selection tool.
 2. Use justified text with the last line aligned left, or fully justified text.
@@ -61,6 +61,8 @@ Old shapes made by the historical script have no owner labels. The new script le
 
 Open a copy of [flattersatz.idml](indesign/flattersatz/flattersatz.idml). The text frame is on page 3. This old file uses Helvetica Bold. Resolve any missing-font warning before testing.
 
+The [old video demo](https://vimeo.com/31792674) shows the original idea. It does not show the current scripts or the typography preview.
+
 ## Work on the code
 
 Use Node.js 22 or later. There are no package dependencies to install.
@@ -75,7 +77,7 @@ npm run check # Run tests and check that both built files are current.
 - `indesign/flattersatz/host.js` reads and changes InDesign objects.
 - `indesign/flattersatz/ui.js` shows the settings window.
 - `indesign/flattersatz/flattersatz.js` starts the script.
-- `tests/` holds local tests and a separate InDesign test script.
+- `tests/` holds local tests, two fake InDesign models and two native InDesign smoke scripts.
 - `dist/flattersatz.jsx` is the built file to install. Do not edit it by hand.
 - `dist/flattersatz-preview.jsx` is the separate experimental preview. Its source entry is `indesign/flattersatz/flattersatz-preview.js`.
 - `rag-core.js` plans word groups, `preview.js` builds the comparison, and `preview-ui.js` shows the preview settings.

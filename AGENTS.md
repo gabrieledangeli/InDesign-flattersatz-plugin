@@ -7,9 +7,8 @@ Flattersatz is an Adobe InDesign ExtendScript. The original mode adds invisible 
 - `indesign/flattersatz/flattersatz.js` starts the script. `core.js` holds pure geometry, `host.js` handles the InDesign DOM, and `ui.js` shows settings.
 - `flattersatz-preview.js` starts the preview, using `rag-core.js`, `preview.js` and `preview-ui.js`. Keep the source document unchanged.
 - `dist/flattersatz.jsx` and `dist/flattersatz-preview.jsx` are standalone builds. Commit them with source changes, but never edit them by hand.
-- `tests/*.test.cjs` and `host-fixture.cjs` provide Node tests and a fake DOM. `tests/indesign-smoke.jsx` runs inside InDesign.
+- `tests/*.test.cjs` holds Node tests. `host-fixture.cjs` and `preview-fixture.cjs` model the DOM. Both `tests/indesign-smoke.jsx` and `tests/indesign-preview-smoke.jsx` run inside InDesign.
 - `flattersatz.idml` and `screenshot.png` in the script folder are historical sample assets.
-- `indesign/_common/helpers.js` contains legacy utilities. `_libs/underscore-1.4.4.js` is retained history and is not loaded by Flattersatz.
 - `docs/AUDIT.md` records the analysis. `docs/TESTING.md` defines native checks. `docs/TYPOGRAPHIC-PREVIEW.md` explains the experiment.
 
 ## Build, Test, and Development Commands
