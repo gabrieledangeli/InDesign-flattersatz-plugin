@@ -1,0 +1,17 @@
+name: Check the script # Name this check.
+on: [push, pull_request] # Check new commits and pull requests.
+permissions: # Set the access needed by this check.
+  contents: read # Read the source files.
+jobs: # List the checks to run.
+  test: # Test the code and built script.
+    runs-on: ubuntu-latest # Use a Linux runner.
+    strategy: # Run with both Node versions.
+      matrix: # List the Node versions.
+        node: [22, 24] # Test both supported versions.
+    steps: # Run these steps in order.
+      - uses: actions/checkout@v7 # Get the source files.
+      - uses: actions/setup-node@v7 # Set up Node.js.
+        with: # Give the Node action its settings.
+          node-version: ${{ matrix.node }} # Use this test's Node version.
+          package-manager-cache: false # No package downloads need a cache.
+      - run: npm run check # Run tests and check the built file.

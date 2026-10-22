@@ -1,7 +1,9 @@
-**indesign script that *automagically* creates beautiful "flattersatz" (= ragged right text) – swiss style!**
+# Flattersatz
 
-**how to use:** select a frame of fully (well-)justified text and run the script.
+This script gives justified InDesign text an uneven right edge.
 
-→ (old) [demo](https://vimeo.com/31792674)
+See the [main README](../../README.md) for the current version, install steps, use and limits.
 
-![screenshot](https://raw.github.com/freder/extendscripts/master/indesign/flattersatz/screenshot.png)
+The [old demo](https://vimeo.com/31792674) shows the original idea. It does not show the current code.
+
+![The original example](screenshot.png)

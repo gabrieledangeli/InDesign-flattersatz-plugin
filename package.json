@@ -1,0 +1,14 @@
+{
+	"name": "indesign-flattersatz",
+	"version": "2.0.0",
+	"private": true,
+	"description": "An InDesign ExtendScript for controlled ragged-right text wrapping.",
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"build": "node tools/build.mjs",
+		"test": "node --test tests/*.test.cjs",
+		"check": "npm test && node tools/build.mjs --check"
+	}
+}
