@@ -8,15 +8,38 @@ Per ogni esecuzione annotare versione completa di InDesign, sistema operativo, l
 
 ## Controlli automatici locali
 
-Con Node.js 22 o successivo eseguire `npm test` per geometria, interfaccia simulata, transazioni e recupero da errori del DOM simulato. `npm run build` genera `dist/flattersatz.jsx`; `npm run check` esegue i test e verifica che il file distribuibile corrisponda ai sorgenti. `git diff --check` controlla gli errori di spaziatura. Questi comandi non avviano InDesign.
+Con Node.js 22 o successivo eseguire `npm test` per geometria, interfaccia simulata, transazioni e recupero da errori del DOM simulato. `npm run build` genera `dist/flattersatz.jsx` e `dist/flattersatz-preview.jsx`; `npm run check` esegue i test e verifica che entrambi i file distribuibili corrispondano ai sorgenti. `git diff --check` controlla gli errori di spaziatura. Questi comandi non avviano InDesign.
 
-Esito locale del 22 ottobre 2026: **45 test superati su Node.js 22 e 24**. Verificata inoltre la sintassi ES3 dei sorgenti ExtendScript e dello smoke test con Acorn 8.15.0, escludendo le direttive Adobe dal parser. Questo controllo sintattico non esegue le API Adobe. Il workflow GitHub ripete i test e controlla il bundle su Node 22 e 24, ma non avvia InDesign.
+Esito locale della revisione del metodo storico, prima del prototipo di anteprima, del 22 ottobre 2026: **45 test superati su Node.js 22 e 24**. Verificata inoltre la sintassi ES3 dei sorgenti ExtendScript e dello smoke test storico con Acorn 8.15.0, escludendo le direttive Adobe dal parser. Questo controllo sintattico non esegue le API Adobe. Il workflow GitHub ripete i test e controlla i bundle su Node 22 e 24, ma non avvia InDesign. Per il numero aggiornato dei test, usare l'esito di `npm test`.
+
+Esito dopo l'implementazione dell'anteprima: **79 test superati su Node.js 22 e 24**, di cui 14 per l'ottimizzatore e 20 per host, dialogo e avvio dell'anteprima. I controlli comprendono confronto con ricerca esaustiva, vincoli No Break esistenti, stili e compositori, errori durante le copie, misure non finite, difformità dei fine-riga, limiti di lavoro e recupero del documento. Entrambi i bundle corrispondono ai sorgenti. Acorn conferma la sintassi ES3 di runtime, bundle e due smoke test nativi. Verificati anche i commenti su ogni riga di codice e l'assenza di punti e virgola nei commenti. **Nessuna di queste prove esegue InDesign.**
 
 ## Smoke test nativo
 
 Eseguire [tests/indesign-smoke.jsx](../tests/indesign-smoke.jsx) da InDesign conservando la struttura relativa della repository, perché carica i moduli con `#include`. Crea un documento temporaneo, genera testo giustificato e verifica applicazione, restringimento reale delle righe, conservazione del testo, ripristino delle preferenze, nuova applicazione, rimozione, annullamento e ripristino. Alla fine chiude il documento temporaneo senza salvarlo e comunica `PASS` oppure `FAILED` con la versione di InDesign.
 
 Questo controllo iniziale non sostituisce la matrice: non verifica l'intera interfaccia ScriptUI, ogni configurazione tipografica o l'esportazione PDF. Un esito `FAILED` deve essere risolto prima di dichiarare pronta la distribuzione per quella versione.
+
+## Anteprima tipografica sperimentale
+
+Eseguire anche [tests/indesign-preview-smoke.jsx](../tests/indesign-preview-smoke.jsx), mantenendo gli include relativi. Questo test crea il proprio documento sorgente, richiama il prototipo e controlla il documento di confronto. Verifica la conservazione del sorgente, la presenza delle varianti e l'assenza di oggetti di contorno nelle varianti native. Chiude soltanto i documenti creati dal test, senza salvarli. **Non è stato eseguito in InDesign nell'ambiente di sviluppo.**
+
+Per la prova manuale usare `dist/flattersatz-preview.jsx` e una sola cornice ammessa. Il protocollo riguarda l'anteprima separata, non un'applicazione al documento sorgente. Vedere [la guida del prototipo](TYPOGRAPHIC-PREVIEW.md).
+
+| Prova | Risultato atteso |
+| --- | --- |
+| Sorgente con font disponibile, parole comuni e spazio verticale libero | Documento separato con originale, bandiera nativa, ottimizzazione No Break e confronto storico quando disponibile. |
+| Confronto prima/dopo del sorgente | Testo, stili, attributi dei caratteri, geometria, numero di oggetti e livelli invariati. |
+| Sorgente con caratteri accentati e alcuni intervalli in corsivo | Parole e formattazione dei caratteri conservate nelle copie; eventuali limiti segnalati prima del risultato. |
+| Variante ottimizzata | Nessun contorno generato e nessun ritorno forzato inserito; fine-riga reali corrispondenti al piano verificato. |
+| Sorgente già a bandiera | Anteprima nativa disponibile; confronto storico indicato come non disponibile se richiede la giustificazione. |
+| Più cornici selezionate, testo vuoto, caso non supportato o limite superato | Messaggio esplicito e nessuna modifica al sorgente. |
+| Misura non valida, testo fuoriuscito o composizione diversa da quella prevista | Nessun successo dichiarato e nessun documento di confronto parziale lasciato aperto. |
+| Unità e preferenze diverse da quelle predefinite | Impostazioni originali ripristinate; misure e confronti nello stesso sistema di coordinate. |
+| Chiusura dell'anteprima senza salvare | Rimane il documento sorgente invariato; nessuna rimozione di formattazione necessaria. |
+| Modifica del sorgente dopo una prima anteprima | La vecchia anteprima resta una copia statica; una nuova esecuzione produce un confronto aggiornato. |
+
+Valutare separatamente la qualità tipografica: ritmo delle righe, ultima riga, gruppi di parole, spaziatura e leggibilità. Un punteggio numerico migliore non prova da solo che il risultato sia preferibile. Registrare anche i casi rifiutati e quelli in cui la bandiera nativa è migliore dell'ottimizzazione.
 
 ## Preparazione
 

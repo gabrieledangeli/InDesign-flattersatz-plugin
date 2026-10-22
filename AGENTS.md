@@ -2,21 +2,22 @@
 
 ## Project Structure & Module Organization
 
-Flattersatz is an Adobe InDesign ExtendScript. It adds invisible text-wrap shapes to give justified text an uneven right edge.
+Flattersatz is an Adobe InDesign ExtendScript. The original mode adds invisible text-wrap shapes. The experimental preview compares native alignment and No Break formatting in a separate document.
 
 - `indesign/flattersatz/flattersatz.js` starts the script. `core.js` holds pure geometry, `host.js` handles the InDesign DOM, and `ui.js` shows settings.
-- `dist/flattersatz.jsx` is the standalone build. Commit it with source changes, but never edit it by hand.
+- `flattersatz-preview.js` starts the preview, using `rag-core.js`, `preview.js` and `preview-ui.js`. Keep the source document unchanged.
+- `dist/flattersatz.jsx` and `dist/flattersatz-preview.jsx` are standalone builds. Commit them with source changes, but never edit them by hand.
 - `tests/*.test.cjs` and `host-fixture.cjs` provide Node tests and a fake DOM. `tests/indesign-smoke.jsx` runs inside InDesign.
 - `flattersatz.idml` and `screenshot.png` in the script folder are historical sample assets.
 - `indesign/_common/helpers.js` contains legacy utilities. `_libs/underscore-1.4.4.js` is retained history and is not loaded by Flattersatz.
-- `docs/AUDIT.md` records the analysis. `docs/TESTING.md` defines native checks.
+- `docs/AUDIT.md` records the analysis. `docs/TESTING.md` defines native checks. `docs/TYPOGRAPHIC-PREVIEW.md` explains the experiment.
 
 ## Build, Test, and Development Commands
 
 Use Node.js 22 or later. No package installation is needed.
 
 - `npm test` runs local regression tests.
-- `npm run build` creates the standalone JSX file.
+- `npm run build` creates both standalone JSX files.
 - `npm run check` runs tests and checks that the build matches its sources.
 - `git diff --check` finds whitespace errors.
 
@@ -32,7 +33,7 @@ Add a short, simple English comment to every new or changed code line. Comments 
 
 Use Node's built-in test runner and name files `*.test.cjs`. Test observable behavior, including failed updates and preference restoration. There is no coverage threshold. Fake DOM tests do not prove native compatibility.
 
-Run `tests/indesign-smoke.jsx` and the documented manual matrix in the target InDesign version before claiming native support. Record any untested cases.
+Run both `tests/indesign-smoke.jsx` and `tests/indesign-preview-smoke.jsx`, plus the manual matrix, in the target InDesign version before claiming native support. Verify unchanged source text and formatting in preview tests. Record untested cases.
 
 ## Commit & Pull Request Guidelines
 

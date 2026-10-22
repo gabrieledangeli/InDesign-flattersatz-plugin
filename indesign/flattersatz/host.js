@@ -79,7 +79,7 @@ var FlattersatzHost = (function(core) { // Keep the InDesign functions together 
 		return a[1] < b[3] - 0.01 && a[3] > b[1] + 0.01 && a[0] < b[2] - 0.01 && a[2] > b[0] + 0.01; // Require overlap in both directions and allow tiny rounding differences.
 	} // End this block.
 
-	function validate_frame(frame) { // Check that the frame uses a supported layout.
+	function validate_frame(frame, allow_ragged) { // Check a frame and allow left alignment only for a preview.
 		var page = frame.parentPage; // Find the page that contains this frame.
 		if (!page || !page.isValid || type_name(page.parent) !== "Spread") { // Require a real document page.
 			fail(frame, "use a frame on a document page, not a parent page or pasteboard."); // Explain that parent pages and the pasteboard are not supported.
@@ -125,7 +125,8 @@ var FlattersatzHost = (function(core) { // Keep the InDesign functions together 
 		var paragraphs = snapshot(story.paragraphs); // Copy the paragraph list before checking it.
 		for (var i = 0; i < paragraphs.length; i++) { // Visit each paragraph in the story.
 			var paragraph = paragraphs[i]; // Read the next paragraph.
-			if (paragraph.justification !== Justification.LEFT_JUSTIFIED && paragraph.justification !== Justification.FULLY_JUSTIFIED) { // Require justified text with a left-aligned or justified last line.
+			if (paragraph.justification !== Justification.LEFT_JUSTIFIED && paragraph.justification !== Justification.FULLY_JUSTIFIED && // Accept the two supported forms of justified text.
+				!(allow_ragged === true && paragraph.justification === Justification.LEFT_ALIGN)) { // Also accept left alignment when making a preview.
 				fail(frame, "justify the text first (last line left-aligned or fully justified)."); // Ask the user to justify the text first.
 			} // End this block.
 			if (paragraph.paragraphDirection !== ParagraphDirectionOptions.LEFT_TO_RIGHT_DIRECTION || // Check that this paragraph reads from left to right.
@@ -446,5 +447,5 @@ var FlattersatzHost = (function(core) { // Keep the InDesign functions together 
 		return result; // Return the collected objects or operation result.
 	} // End this block.
 
-	return {run: run}; // Make the main run function available to the entry script.
+	return {run: run, validate_frame: validate_frame}; // Share the run function and the frame checks with the preview.
 })(FlattersatzCore); // Connect these InDesign functions to the shared geometry code.

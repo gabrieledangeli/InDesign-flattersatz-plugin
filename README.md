@@ -4,13 +4,25 @@ Flattersatz gives justified text an uneven right edge. It places small, invisibl
 
 This project is an InDesign script. You run it from the Scripts panel. It is not a panel plug-in.
 
+An experimental second script, **Flattersatz Preview**, compares that method with a ragged-right version that uses text formatting instead of wrap shapes. It creates a separate comparison document and leaves the source frame unchanged. See [the preview guide](docs/TYPOGRAPHIC-PREVIEW.md).
+
 ![The original Flattersatz example](indesign/flattersatz/screenshot.png)
 
 ## InDesign version
 
 The current target is **InDesign 2026, version 21.6**. This is the latest stable version listed in the [Adobe release notes](https://helpx.adobe.com/indesign/desktop/whats-new/release-notes.html) on 22 October 2026. The script uses ExtendScript, which InDesign still supports.
 
-The local code tests pass. **The new script has not yet been tested inside InDesign 21.6.** InDesign is not installed in the development workspace. Use a copy of your document for the first test. See the [InDesign test guide](docs/TESTING.md).
+The local code tests pass. **Neither script has yet been tested inside InDesign 21.6.** InDesign is not installed in the development workspace. Use a copy of your document for the first test. See the [InDesign test guide](docs/TESTING.md).
+
+## Try the typography preview
+
+Install [dist/flattersatz-preview.jsx](dist/flattersatz-preview.jsx) using the Scripts panel steps below. Select one simple text frame and run it. The new document compares four versions: the source frame, normal left alignment, an optimized version using **No Break**, and the historical wrap method when the source is justified.
+
+The optimized version keeps the words and uses formatting to keep chosen word groups together. It does not add wrap shapes or forced line breaks. This is a bounded experiment, not a new InDesign composer or a live preview. InDesign must accept the computed line endings before the script reports success. It may reject a sample it cannot reproduce safely.
+
+The first version uses whole words and turns off hyphenation in both left-aligned copies. Use at most 80 word groups per paragraph. **Ragged zone** sets a preferred range for line lengths. It is a guide for the planner, not an exact cut at the right edge.
+
+Close the comparison document without saving to discard the preview. There is no command to apply it to the source in this version. Re-run the script from the source after editing its text or layout.
 
 ## Install
 
@@ -55,8 +67,8 @@ Use Node.js 22 or later. There are no package dependencies to install.
 
 ```sh
 npm test # Run the local tests.
-npm run build # Make the single script file.
-npm run check # Run tests and check that the built file is current.
+npm run build # Make both standalone script files.
+npm run check # Run tests and check that both built files are current.
 ```
 
 - `indesign/flattersatz/core.js` calculates shape positions.
@@ -65,9 +77,13 @@ npm run check # Run tests and check that the built file is current.
 - `indesign/flattersatz/flattersatz.js` starts the script.
 - `tests/` holds local tests and a separate InDesign test script.
 - `dist/flattersatz.jsx` is the built file to install. Do not edit it by hand.
+- `dist/flattersatz-preview.jsx` is the separate experimental preview. Its source entry is `indesign/flattersatz/flattersatz-preview.js`.
+- `rag-core.js` plans word groups, `preview.js` builds the comparison, and `preview-ui.js` shows the preview settings.
 
 Each changed code line has a short English comment. Keep these comments simple and do not put semicolons in them. JSON files cannot contain comments.
 
 Run [tests/indesign-smoke.jsx](tests/indesign-smoke.jsx) from InDesign to check the real text layout and undo behavior. Keep it in the repository folder so its includes work. It creates and closes its own test document without saving. The Node tests use a small fake InDesign model and cannot replace this test.
+
+Run [tests/indesign-preview-smoke.jsx](tests/indesign-preview-smoke.jsx) separately to check the preview inside InDesign. It creates disposable source and comparison documents. It checks that the source stays unchanged and closes its own documents without saving.
 
 See [AGENTS.md](AGENTS.md) for contributor rules. The detailed [audit](docs/AUDIT.md) and [test guide](docs/TESTING.md) are in Italian.
